@@ -3,8 +3,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { Camera, Check, ImagePlus, Info, Sparkles, Upload, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getProviderLabel } from '@/lib/tryon-provider-labels';
 import type { TryOnState } from '@/hooks/useTryOn';
+import { useTryOnProvider } from '@/hooks/useTryOnProvider';
 import type { Product } from '@/types/product';
+import { AiDisclaimer } from '@/components/tryon/AiDisclaimer';
 import { ProcessingScreen } from '@/components/tryon/ProcessingScreen';
 
 const models = [
@@ -54,6 +57,7 @@ export function TryOnModal({
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [fileError, setFileError] = useState<string | null>(null);
   const isProcessing = state.status === 'uploading' || state.status === 'processing';
+  const provider = useTryOnProvider();
 
   useEffect(() => {
     if (!open) {
@@ -164,7 +168,7 @@ export function TryOnModal({
         </div>
 
         {isProcessing ? (
-          <ProcessingScreen status={state.status === 'uploading' ? 'uploading' : 'processing'} onCancel={onCancelProcessing} />
+          <ProcessingScreen status={state.status === 'uploading' ? 'uploading' : 'processing'} provider={provider} onCancel={onCancelProcessing} />
         ) : (
           <div className="grid gap-5 p-5 sm:gap-6 sm:p-8 lg:grid-cols-[1.1fr_0.9fr]">
             <div>
@@ -267,7 +271,7 @@ export function TryOnModal({
                   />
                 </label>
               </div>
-              <p className="mb-4 text-xs leading-5 text-ink/55">Ảnh được gửi đến Gemini API để xử lý; ứng dụng không lưu ảnh vào cơ sở dữ liệu.</p>
+              <AiDisclaimer variant="compact" provider={provider} />
               <label className="mb-4 flex items-start gap-2 text-xs leading-5 text-ink/65">
                 <input
                   type="checkbox"
@@ -276,7 +280,7 @@ export function TryOnModal({
                   className="mt-0.5 h-4 w-4 rounded border-ink/20 accent-ink"
                   aria-label="Tôi đồng ý chính sách quyền riêng tư"
                 />
-                Tôi đồng ý gửi ảnh đến Gemini API để tạo kết quả thử đồ.
+                Tôi đã đọc phần quyền riêng tư ở trên và đồng ý gửi ảnh đến {getProviderLabel(provider)} để tạo kết quả thử đồ.
               </label>
               {fileError && <p role="alert" className="mb-3 text-sm text-red-700">{fileError}</p>}
               {state.status === 'error' && (

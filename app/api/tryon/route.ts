@@ -6,6 +6,8 @@ import sharp from 'sharp';
 import { createRateLimiter } from '@/lib/rate-limit';
 import { TRYON_CONFIG } from '@/lib/tryon-config';
 import { recordTryOnMetric } from '@/lib/tryon-metrics-server';
+import { getTryOnPrompt } from '@/lib/tryon-prompt';
+import { getConfiguredTryOnProvider } from '@/lib/tryon-provider';
 import { products } from '@/lib/products';
 
 export const runtime = 'nodejs';
@@ -19,7 +21,6 @@ const HUGGINGFACE_SPACE_URL = 'https://yisol-idm-vton.hf.space';
 const HUGGINGFACE_TIMEOUT_MS = 48_000;
 const MAX_PROVIDER_IMAGE_BYTES = 20 * 1024 * 1024;
 const GEMINI_MODEL = 'gemini-3.1-flash-image';
-const GEMINI_PROMPT = 'Mặc chiếc áo trong ảnh thứ hai lên người trong ảnh thứ nhất. Giữ nguyên khuôn mặt, tư thế, dáng người, nền và ánh sáng. Áo vừa vặn tự nhiên, đúng màu và chi tiết.';
 
 class RequestTooLargeError extends Error {}
 
@@ -228,8 +229,8 @@ export async function POST(request: Request) {
     }
   }
 
-  const provider = process.env.TRYON_PROVIDER?.trim().toLowerCase() || 'gemini';
-  if (provider !== 'gemini' && provider !== 'huggingface') {
+  const provider = getConfiguredTryOnProvider();
+  if (!provider) {
     return errorResponse('TRYON_PROVIDER không hợp lệ. Hãy chọn gemini hoặc huggingface.', 500);
   }
 
@@ -300,6 +301,7 @@ export async function POST(request: Request) {
     return errorResponse('Không tìm thấy sản phẩm, màu sắc hoặc kích thước đã chọn.', 400);
   }
 
+  const prompt = getTryOnPrompt({ provider, product, color, size });
   const attemptStartedAt = Date.now();
   let metricRecorded = false;
   const recordOutcome = async (outcome: 'success' | 'error') => {
@@ -310,6 +312,7 @@ export async function POST(request: Request) {
       color,
       provider,
       outcome,
+      promptVersion: prompt.key,
       durationMs: Math.min(60_000, Date.now() - attemptStartedAt),
     });
   };
@@ -340,11 +343,13 @@ export async function POST(request: Request) {
         personBytes,
         personFile.type,
         garmentBytes,
-        `${product.name}, màu ${color}, kích thước ${size}.`,
+        prompt.text,
         validHuggingFaceToken,
       );
       await recordOutcome('success');
-      return NextResponse.json({ image }, { headers: { 'X-TryOn-Provider': provider } });
+      return NextResponse.json({ image }, {
+        headers: { 'X-TryOn-Provider': provider, 'X-TryOn-Prompt-Version': prompt.key },
+      });
     }
 
     if (!geminiApiKey) {
@@ -374,7 +379,7 @@ export async function POST(request: Request) {
                   data: garmentBytes.toString('base64'),
                 },
               },
-              { text: GEMINI_PROMPT },
+              { text: prompt.text },
             ],
           }],
           generationConfig: { responseModalities: ['TEXT', 'IMAGE'] },
@@ -409,7 +414,7 @@ export async function POST(request: Request) {
     await recordOutcome('success');
     return NextResponse.json(
       { image: `data:${image.mimeType};base64,${image.data}` },
-      { headers: { 'X-TryOn-Provider': provider } },
+      { headers: { 'X-TryOn-Provider': provider, 'X-TryOn-Prompt-Version': prompt.key } },
     );
   } catch (error) {
     await recordOutcome('error');

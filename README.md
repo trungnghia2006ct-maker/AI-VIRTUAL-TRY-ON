@@ -41,7 +41,9 @@ Các trang: `/` (sản phẩm), `/products`, `/cart`, `/privacy`, `/metrics` (�
 ## 4) Metrics quản trị và feedback
 
 1. Điền `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` và `ADMIN_METRICS_PASSWORD` vào `.env.local` hoặc Vercel Environment Variables. Mật khẩu quản trị cần ít nhất 12 ký tự.
-2. Chạy migration `supabase/migrations/20261026010000_tryon_feedback_metrics.sql` trong Supabase SQL Editor.
+2. Chạy lần lượt các migration trong Supabase SQL Editor, **trước khi deploy code mới**:
+   1. `supabase/migrations/20261026010000_tryon_feedback_metrics.sql`
+   2. `supabase/migrations/20261031010000_tryon_prompt_version.sql` (thêm cột `prompt_version`; chưa chạy thì lượt ghi feedback sẽ lỗi).
 3. Mở `/admin/metrics` và đăng nhập bằng `ADMIN_METRICS_PASSWORD`.
 
 Service-role key và mật khẩu chỉ được đọc trong route server; không dùng biến `NEXT_PUBLIC_*` cho secret. Migration bật Row Level Security, không cấp quyền cho `anon`/`authenticated`, và chỉ cấp quyền cần thiết cho `service_role`. Bản ghi chỉ chứa mã sản phẩm, màu, provider, thời lượng, trạng thái hoặc đánh giá; không nhận hay lưu ảnh.
@@ -54,10 +56,14 @@ Service-role key và mật khẩu chỉ được đọc trong route server; khô
   **Bản in-memory không bền trên serverless (Vercel):** mỗi instance có bộ nhớ riêng và bị reset khi cold start, nên giới hạn chỉ mang tính tương đối.
   Khi chạy thật, hãy cài đặt `RateLimiter` dùng Upstash Redis hoặc Vercel KV và trả về trong `createRateLimiter()`.
 
-## 6) Quyền riêng tư
+## 6) Prompt và version
+
+Prompt thử đồ chỉ nằm ở `lib/tryon-prompt.ts`, mỗi template có `id` và `version` (ví dụ `tryon-gemini@1.0.0`). **Mỗi lần sửa nội dung prompt phải tăng version.** Version được trả ở header `X-TryOn-Prompt-Version` của `POST /api/tryon` và ghi vào cột `prompt_version` của `tryon_metrics` và `tryon_feedback`. `GET /api/tryon/config` trả tên provider đang cấu hình để UI hiển thị đúng (không trả key).
+
+## 7) Quyền riêng tư
 
 - Ảnh được gửi tới provider AI đang cấu hình (Gemini hoặc Hugging Face IDM-VTON) để tạo kết quả; ứng dụng không lưu ảnh vào cơ sở dữ liệu.
-- Nếu dùng Gemini, việc Google xử lý dữ liệu tuân theo [điều khoản Gemini API](https://ai.google.dev/gemini-api/terms); hãy đọc kỹ trước khi gửi ảnh cá nhân.
+- Nếu dùng Gemini, việc Google xử lý dữ liệu tuân theo [điều khoản Gemini API](https://ai.google.dev/gemini-api/terms). **Gói miễn phí:** theo bản điều khoản kiểm tra ngày 31/10/2026, Google có thể dùng dữ liệu để cải thiện sản phẩm, người đánh giá có thể đọc dữ liệu, và Google cấm gửi thông tin cá nhân lên gói này. Xem chi tiết và rủi ro trong [docs/PRIVACY_REVIEW.md](docs/PRIVACY_REVIEW.md). Khi chuyển sang gói trả phí, đổi `GEMINI_FREE_TIER` trong `lib/tryon-provider-labels.ts`.
 - Metrics và feedback trong Supabase chỉ chứa metadata thử đồ, không chứa ảnh.
 - Trang `/metrics` hiện tại hiển thị số liệu trong sessionStorage của trình duyệt; `/admin/metrics` tổng hợp số liệu đã lưu server-side trong Supabase.
 

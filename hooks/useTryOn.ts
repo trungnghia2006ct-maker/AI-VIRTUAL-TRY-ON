@@ -15,6 +15,7 @@ export interface TryOnState {
   beforeImageUrl: string | null;
   resultImageUrl: string | null;
   provider: TryOnProvider | null;
+  promptVersion: string | null;
   error: string | null;
   inferenceTimeMs: number | null;
 }
@@ -24,6 +25,7 @@ const INITIAL_STATE: TryOnState = {
   beforeImageUrl: null,
   resultImageUrl: null,
   provider: null,
+  promptVersion: null,
   error: null,
   inferenceTimeMs: null,
 };
@@ -143,6 +145,7 @@ export function useTryOn() {
         beforeImageUrl: preparedImage.dataUrl,
         resultImageUrl: result.image,
         provider: result.provider,
+        promptVersion: result.promptVersion,
         error: null,
         inferenceTimeMs,
       });

@@ -1,3 +1,4 @@
+import { PROMPT_VERSION_PATTERN } from '@/lib/tryon-prompt';
 import type { TryOnProvider, TryOnRequestInput } from '@/types/virtual-try-on';
 
 async function readJson(response: Response): Promise<unknown> {
@@ -34,7 +35,7 @@ async function request(url: string, init: RequestInit): Promise<{ body: unknown;
 export async function startTryOn(
   input: TryOnRequestInput,
   signal: AbortSignal,
-): Promise<{ image: string; provider: TryOnProvider }> {
+): Promise<{ image: string; provider: TryOnProvider; promptVersion: string | null }> {
   const formData = new FormData();
   formData.append('image', input.image);
   formData.append('productId', input.productId);
@@ -58,13 +59,19 @@ export async function startTryOn(
   if (provider !== 'gemini' && provider !== 'huggingface') {
     throw new Error('Không nhận được thông tin provider từ dịch vụ thử đồ.');
   }
-  return { image: responseBody.image, provider };
+  const promptVersion = response.headers.get('x-tryon-prompt-version');
+  return {
+    image: responseBody.image,
+    provider,
+    promptVersion: promptVersion && PROMPT_VERSION_PATTERN.test(promptVersion) ? promptVersion : null,
+  };
 }
 
 export interface TryOnFeedbackInput {
   productId: string;
   color: string;
   provider: TryOnProvider;
+  promptVersion?: string;
   durationMs: number;
   rating: 'up' | 'down';
   reason?: 'áo méo' | 'sai màu' | 'mặt/tay lỗi' | 'khác';
