@@ -22,6 +22,7 @@ export function SiteHeader() {
           <a data-analytics="nav-privacy" data-analytics-feature="navigation" href="/privacy" className="hover:text-moss">Quyền riêng tư</a>
         </nav>
         <div className="flex items-center gap-1">
+          <a data-analytics="nav-3d" data-analytics-feature="navigation" href="/thu-do-3d" className="rounded-full border border-ink/15 px-3 py-2 text-xs font-semibold hover:bg-sand" aria-label="Phòng thử 3D">Thử 3D</a>
           <button type="button" className="rounded-full p-3 hover:bg-sand" aria-label="Sản phẩm yêu thích"><Heart size={19} /></button>
           <a data-analytics="nav-cart" data-analytics-feature="navigation" href="/cart" className="relative rounded-full p-3 hover:bg-sand" aria-label={`Giỏ hàng, ${itemCount} sản phẩm`}>
             <ShoppingBag size={19} />

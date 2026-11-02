@@ -1,0 +1,964 @@
+/* Precompiled and scoped; no changes to the host Tailwind config. */
+.nhom07-ai3d-scope *,.nhom07-ai3d-scope ::before,.nhom07-ai3d-scope ::after {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x:  ;
+  --tw-pan-y:  ;
+  --tw-pinch-zoom:  ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
+  --tw-ordinal:  ;
+  --tw-slashed-zero:  ;
+  --tw-numeric-figure:  ;
+  --tw-numeric-spacing:  ;
+  --tw-numeric-fraction:  ;
+  --tw-ring-inset:  ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur:  ;
+  --tw-brightness:  ;
+  --tw-contrast:  ;
+  --tw-grayscale:  ;
+  --tw-hue-rotate:  ;
+  --tw-invert:  ;
+  --tw-saturate:  ;
+  --tw-sepia:  ;
+  --tw-drop-shadow:  ;
+  --tw-backdrop-blur:  ;
+  --tw-backdrop-brightness:  ;
+  --tw-backdrop-contrast:  ;
+  --tw-backdrop-grayscale:  ;
+  --tw-backdrop-hue-rotate:  ;
+  --tw-backdrop-invert:  ;
+  --tw-backdrop-opacity:  ;
+  --tw-backdrop-saturate:  ;
+  --tw-backdrop-sepia:  ;
+  --tw-contain-size:  ;
+  --tw-contain-layout:  ;
+  --tw-contain-paint:  ;
+  --tw-contain-style:  ;
+}
+
+.nhom07-ai3d-scope ::backdrop {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x:  ;
+  --tw-pan-y:  ;
+  --tw-pinch-zoom:  ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
+  --tw-ordinal:  ;
+  --tw-slashed-zero:  ;
+  --tw-numeric-figure:  ;
+  --tw-numeric-spacing:  ;
+  --tw-numeric-fraction:  ;
+  --tw-ring-inset:  ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur:  ;
+  --tw-brightness:  ;
+  --tw-contrast:  ;
+  --tw-grayscale:  ;
+  --tw-hue-rotate:  ;
+  --tw-invert:  ;
+  --tw-saturate:  ;
+  --tw-sepia:  ;
+  --tw-drop-shadow:  ;
+  --tw-backdrop-blur:  ;
+  --tw-backdrop-brightness:  ;
+  --tw-backdrop-contrast:  ;
+  --tw-backdrop-grayscale:  ;
+  --tw-backdrop-hue-rotate:  ;
+  --tw-backdrop-invert:  ;
+  --tw-backdrop-opacity:  ;
+  --tw-backdrop-saturate:  ;
+  --tw-backdrop-sepia:  ;
+  --tw-contain-size:  ;
+  --tw-contain-layout:  ;
+  --tw-contain-paint:  ;
+  --tw-contain-style:  ;
+}/*
+! tailwindcss v3.4.19 | MIT License | https://tailwindcss.com
+*//*
+1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
+2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
+*/
+
+.nhom07-ai3d-scope *,.nhom07-ai3d-scope ::before,.nhom07-ai3d-scope ::after {
+  box-sizing: border-box; /* 1 */
+  border-width: 0; /* 2 */
+  border-style: solid; /* 2 */
+  border-color: #e5e7eb; /* 2 */
+}
+
+.nhom07-ai3d-scope ::before,.nhom07-ai3d-scope ::after {
+  --tw-content: '';
+}
+
+/*
+1. Use a consistent sensible line-height in all browsers.
+2. Prevent adjustments of font size after orientation changes in iOS.
+3. Use a more readable tab size.
+4. Use the user's configured `sans` font-family by default.
+5. Use the user's configured `sans` font-feature-settings by default.
+6. Use the user's configured `sans` font-variation-settings by default.
+7. Disable tap highlights on iOS
+*/
+
+.nhom07-ai3d-scope,.nhom07-ai3d-scope {
+  line-height: 1.5; /* 1 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+  -moz-tab-size: 4; /* 3 */
+  tab-size: 4; /* 3 */
+  font-family: "DM Sans", sans-serif; /* 4 */
+  font-feature-settings: normal; /* 5 */
+  font-variation-settings: normal; /* 6 */
+  -webkit-tap-highlight-color: transparent; /* 7 */
+}
+
+/*
+1. Remove the margin in all browsers.
+2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.
+*/
+
+.nhom07-ai3d-scope {
+  margin: 0; /* 1 */
+  line-height: inherit; /* 2 */
+}
+
+/*
+1. Add the correct height in Firefox.
+2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
+3. Ensure horizontal rules are visible by default.
+*/
+
+.nhom07-ai3d-scope hr {
+  height: 0; /* 1 */
+  color: inherit; /* 2 */
+  border-top-width: 1px; /* 3 */
+}
+
+/*
+Add the correct text decoration in Chrome, Edge, and Safari.
+*/
+
+.nhom07-ai3d-scope abbr:where([title]) {
+  text-decoration: underline dotted;
+}
+
+/*
+Remove the default font size and weight for headings.
+*/
+
+.nhom07-ai3d-scope h1,.nhom07-ai3d-scope h2,.nhom07-ai3d-scope h3,.nhom07-ai3d-scope h4,.nhom07-ai3d-scope h5,.nhom07-ai3d-scope h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/*
+Reset links to optimize for opt-in styling instead of opt-out.
+*/
+
+.nhom07-ai3d-scope a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+/*
+Add the correct font weight in Edge and Safari.
+*/
+
+.nhom07-ai3d-scope b,.nhom07-ai3d-scope strong {
+  font-weight: bolder;
+}
+
+/*
+1. Use the user's configured `mono` font-family by default.
+2. Use the user's configured `mono` font-feature-settings by default.
+3. Use the user's configured `mono` font-variation-settings by default.
+4. Correct the odd `em` font sizing in all browsers.
+*/
+
+.nhom07-ai3d-scope code,.nhom07-ai3d-scope kbd,.nhom07-ai3d-scope samp,.nhom07-ai3d-scope pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; /* 1 */
+  font-feature-settings: normal; /* 2 */
+  font-variation-settings: normal; /* 3 */
+  font-size: 1em; /* 4 */
+}
+
+/*
+Add the correct font size in all browsers.
+*/
+
+.nhom07-ai3d-scope small {
+  font-size: 80%;
+}
+
+/*
+Prevent `sub` and `sup` elements from affecting the line height in all browsers.
+*/
+
+.nhom07-ai3d-scope sub,.nhom07-ai3d-scope sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.nhom07-ai3d-scope sub {
+  bottom: -0.25em;
+}
+
+.nhom07-ai3d-scope sup {
+  top: -0.5em;
+}
+
+/*
+1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)
+2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)
+3. Remove gaps between table borders by default.
+*/
+
+.nhom07-ai3d-scope table {
+  text-indent: 0; /* 1 */
+  border-color: inherit; /* 2 */
+  border-collapse: collapse; /* 3 */
+}
+
+/*
+1. Change the font styles in all browsers.
+2. Remove the margin in Firefox and Safari.
+3. Remove default padding in all browsers.
+*/
+
+.nhom07-ai3d-scope button,.nhom07-ai3d-scope input,.nhom07-ai3d-scope optgroup,.nhom07-ai3d-scope select,.nhom07-ai3d-scope textarea {
+  font-family: inherit; /* 1 */
+  font-feature-settings: inherit; /* 1 */
+  font-variation-settings: inherit; /* 1 */
+  font-size: 100%; /* 1 */
+  font-weight: inherit; /* 1 */
+  line-height: inherit; /* 1 */
+  letter-spacing: inherit; /* 1 */
+  color: inherit; /* 1 */
+  margin: 0; /* 2 */
+  padding: 0; /* 3 */
+}
+
+/*
+Remove the inheritance of text transform in Edge and Firefox.
+*/
+
+.nhom07-ai3d-scope button,.nhom07-ai3d-scope select {
+  text-transform: none;
+}
+
+/*
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Remove default button styles.
+*/
+
+.nhom07-ai3d-scope button,.nhom07-ai3d-scope input:where([type='button']),.nhom07-ai3d-scope input:where([type='reset']),.nhom07-ai3d-scope input:where([type='submit']) {
+  -webkit-appearance: button; /* 1 */
+  background-color: transparent; /* 2 */
+  background-image: none; /* 2 */
+}
+
+/*
+Use the modern Firefox focus style for all focusable elements.
+*/
+
+.nhom07-ai3d-scope :-moz-focusring {
+  outline: auto;
+}
+
+/*
+Remove the additional `:invalid` styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737)
+*/
+
+.nhom07-ai3d-scope :-moz-ui-invalid {
+  box-shadow: none;
+}
+
+/*
+Add the correct vertical alignment in Chrome and Firefox.
+*/
+
+.nhom07-ai3d-scope progress {
+  vertical-align: baseline;
+}
+
+/*
+Correct the cursor style of increment and decrement buttons in Safari.
+*/
+
+.nhom07-ai3d-scope ::-webkit-inner-spin-button,.nhom07-ai3d-scope ::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/*
+1. Correct the odd appearance in Chrome and Safari.
+2. Correct the outline style in Safari.
+*/
+
+.nhom07-ai3d-scope [type='search'] {
+  -webkit-appearance: textfield; /* 1 */
+  outline-offset: -2px; /* 2 */
+}
+
+/*
+Remove the inner padding in Chrome and Safari on macOS.
+*/
+
+.nhom07-ai3d-scope ::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/*
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Change font properties to `inherit` in Safari.
+*/
+
+.nhom07-ai3d-scope ::-webkit-file-upload-button {
+  -webkit-appearance: button; /* 1 */
+  font: inherit; /* 2 */
+}
+
+/*
+Add the correct display in Chrome and Safari.
+*/
+
+.nhom07-ai3d-scope summary {
+  display: list-item;
+}
+
+/*
+Removes the default spacing and border for appropriate elements.
+*/
+
+.nhom07-ai3d-scope blockquote,.nhom07-ai3d-scope dl,.nhom07-ai3d-scope dd,.nhom07-ai3d-scope h1,.nhom07-ai3d-scope h2,.nhom07-ai3d-scope h3,.nhom07-ai3d-scope h4,.nhom07-ai3d-scope h5,.nhom07-ai3d-scope h6,.nhom07-ai3d-scope hr,.nhom07-ai3d-scope figure,.nhom07-ai3d-scope p,.nhom07-ai3d-scope pre {
+  margin: 0;
+}
+
+.nhom07-ai3d-scope fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+.nhom07-ai3d-scope legend {
+  padding: 0;
+}
+
+.nhom07-ai3d-scope ol,.nhom07-ai3d-scope ul,.nhom07-ai3d-scope menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+Reset default styling for dialogs.
+*/
+.nhom07-ai3d-scope dialog {
+  padding: 0;
+}
+
+/*
+Prevent resizing textareas horizontally by default.
+*/
+
+.nhom07-ai3d-scope textarea {
+  resize: vertical;
+}
+
+/*
+1. Reset the default placeholder opacity in Firefox. (https://github.com/tailwindlabs/tailwindcss/issues/3300)
+2. Set the default placeholder color to the user's configured gray 400 color.
+*/
+
+.nhom07-ai3d-scope input::placeholder,.nhom07-ai3d-scope textarea::placeholder {
+  opacity: 1; /* 1 */
+  color: #9ca3af; /* 2 */
+}
+
+/*
+Set the default cursor for buttons.
+*/
+
+.nhom07-ai3d-scope button,.nhom07-ai3d-scope [role="button"] {
+  cursor: pointer;
+}
+
+/*
+Make sure disabled buttons don't get the pointer cursor.
+*/
+.nhom07-ai3d-scope :disabled {
+  cursor: default;
+}
+
+/*
+1. Make replaced elements `display: block` by default. (https://github.com/mozdevs/cssremedy/issues/14)
+2. Add `vertical-align: middle` to align replaced elements more sensibly by default. (https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210)
+   This can trigger a poorly considered lint error in some tools but is included by design.
+*/
+
+.nhom07-ai3d-scope img,.nhom07-ai3d-scope svg,.nhom07-ai3d-scope video,.nhom07-ai3d-scope canvas,.nhom07-ai3d-scope audio,.nhom07-ai3d-scope iframe,.nhom07-ai3d-scope embed,.nhom07-ai3d-scope object {
+  display: block; /* 1 */
+  vertical-align: middle; /* 2 */
+}
+
+/*
+Constrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)
+*/
+
+.nhom07-ai3d-scope img,.nhom07-ai3d-scope video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Make elements with the HTML hidden attribute stay hidden by default */
+.nhom07-ai3d-scope [hidden]:where(:not([hidden="until-found"])) {
+  display: none;
+}
+  .nhom07-ai3d-scope * { box-sizing: border-box; }
+  .nhom07-ai3d-scope { margin: 0; min-width: 320px; font-family: 'DM Sans', sans-serif; }
+  .nhom07-ai3d-scope button,.nhom07-ai3d-scope input { font: inherit; }
+  .nhom07-ai3d-scope .container-wide {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1440px;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+  @media (min-width: 1024px) {
+
+  .nhom07-ai3d-scope .container-wide {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
+  @media (min-width: 1536px) {
+
+  .nhom07-ai3d-scope .container-wide {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+  .nhom07-ai3d-scope .eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  --tw-text-opacity: 1;
+  color: rgb(80 98 77 / var(--tw-text-opacity, 1));
+}
+  .nhom07-ai3d-scope .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(29 36 32 / var(--tw-bg-opacity, 1));
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+  .nhom07-ai3d-scope .btn-primary:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(80 98 77 / var(--tw-bg-opacity, 1));
+}
+  .nhom07-ai3d-scope .btn-primary:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(80 98 77 / var(--tw-ring-opacity, 1));
+  --tw-ring-offset-width: 2px;
+}
+  .nhom07-ai3d-scope .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  border-width: 1px;
+  border-color: rgb(29 36 32 / 0.15);
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(29 36 32 / var(--tw-text-opacity, 1));
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+  .nhom07-ai3d-scope .btn-secondary:hover {
+  border-color: rgb(29 36 32 / 0.4);
+  background-color: rgb(232 223 210 / 0.3);
+}
+  .nhom07-ai3d-scope .btn-secondary:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(80 98 77 / var(--tw-ring-opacity, 1));
+  --tw-ring-offset-width: 2px;
+}
+.nhom07-ai3d-scope .pointer-events-none {
+  pointer-events: none;
+}
+.nhom07-ai3d-scope .absolute {
+  position: absolute;
+}
+.nhom07-ai3d-scope .relative {
+  position: relative;
+}
+.nhom07-ai3d-scope .inset-0 {
+  inset: 0px;
+}
+.nhom07-ai3d-scope .inset-x-4 {
+  left: 1rem;
+  right: 1rem;
+}
+.nhom07-ai3d-scope .inset-x-6 {
+  left: 1.5rem;
+  right: 1.5rem;
+}
+.nhom07-ai3d-scope .bottom-5 {
+  bottom: 1.25rem;
+}
+.nhom07-ai3d-scope .left-5 {
+  left: 1.25rem;
+}
+.nhom07-ai3d-scope .top-20 {
+  top: 5rem;
+}
+.nhom07-ai3d-scope .top-5 {
+  top: 1.25rem;
+}
+.nhom07-ai3d-scope .z-10 {
+  z-index: 10;
+}
+.nhom07-ai3d-scope .z-20 {
+  z-index: 20;
+}
+.nhom07-ai3d-scope .my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.nhom07-ai3d-scope .mb-2 {
+  margin-bottom: 0.5rem;
+}
+.nhom07-ai3d-scope .mb-5 {
+  margin-bottom: 1.25rem;
+}
+.nhom07-ai3d-scope .mb-7 {
+  margin-bottom: 1.75rem;
+}
+.nhom07-ai3d-scope .mb-8 {
+  margin-bottom: 2rem;
+}
+.nhom07-ai3d-scope .mt-1 {
+  margin-top: 0.25rem;
+}
+.nhom07-ai3d-scope .mt-2 {
+  margin-top: 0.5rem;
+}
+.nhom07-ai3d-scope .mt-3 {
+  margin-top: 0.75rem;
+}
+.nhom07-ai3d-scope .mt-4 {
+  margin-top: 1rem;
+}
+.nhom07-ai3d-scope .flex {
+  display: flex;
+}
+.nhom07-ai3d-scope .grid {
+  display: grid;
+}
+.nhom07-ai3d-scope .h-20 {
+  height: 5rem;
+}
+.nhom07-ai3d-scope .h-9 {
+  height: 2.25rem;
+}
+.nhom07-ai3d-scope .h-full {
+  height: 100%;
+}
+.nhom07-ai3d-scope .min-h-\[450px\] {
+  min-height: 450px;
+}
+.nhom07-ai3d-scope .min-h-\[540px\] {
+  min-height: 540px;
+}
+.nhom07-ai3d-scope .w-20 {
+  width: 5rem;
+}
+.nhom07-ai3d-scope .w-9 {
+  width: 2.25rem;
+}
+.nhom07-ai3d-scope .w-full {
+  width: 100%;
+}
+.nhom07-ai3d-scope .max-w-xs {
+  max-width: 20rem;
+}
+@keyframes nhom07-spin {
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+.nhom07-ai3d-scope .animate-spin {
+  animation: nhom07-spin 1s linear infinite;
+}
+.nhom07-ai3d-scope .resize {
+  resize: both;
+}
+.nhom07-ai3d-scope .grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.nhom07-ai3d-scope .flex-col {
+  flex-direction: column;
+}
+.nhom07-ai3d-scope .flex-wrap {
+  flex-wrap: wrap;
+}
+.nhom07-ai3d-scope .items-end {
+  align-items: flex-end;
+}
+.nhom07-ai3d-scope .items-center {
+  align-items: center;
+}
+.nhom07-ai3d-scope .justify-center {
+  justify-content: center;
+}
+.nhom07-ai3d-scope .justify-between {
+  justify-content: space-between;
+}
+.nhom07-ai3d-scope .gap-2 {
+  gap: 0.5rem;
+}
+.nhom07-ai3d-scope .gap-3 {
+  gap: 0.75rem;
+}
+.nhom07-ai3d-scope .gap-4 {
+  gap: 1rem;
+}
+.nhom07-ai3d-scope .gap-6 {
+  gap: 1.5rem;
+}
+.nhom07-ai3d-scope .space-y-5 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1.25rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1.25rem * var(--tw-space-y-reverse));
+}
+.nhom07-ai3d-scope .overflow-hidden {
+  overflow: hidden;
+}
+.nhom07-ai3d-scope .rounded-2xl {
+  border-radius: 1rem;
+}
+.nhom07-ai3d-scope .rounded-3xl {
+  border-radius: 1.5rem;
+}
+.nhom07-ai3d-scope .rounded-full {
+  border-radius: 9999px;
+}
+.nhom07-ai3d-scope .rounded-xl {
+  border-radius: 0.75rem;
+}
+.nhom07-ai3d-scope .border {
+  border-width: 1px;
+}
+.nhom07-ai3d-scope .border-black\/15 {
+  border-color: rgb(0 0 0 / 0.15);
+}
+.nhom07-ai3d-scope .border-ink {
+  --tw-border-opacity: 1;
+  border-color: rgb(29 36 32 / var(--tw-border-opacity, 1));
+}
+.nhom07-ai3d-scope .border-ink\/10 {
+  border-color: rgb(29 36 32 / 0.1);
+}
+.nhom07-ai3d-scope .border-ink\/15 {
+  border-color: rgb(29 36 32 / 0.15);
+}
+.nhom07-ai3d-scope .border-ink\/20 {
+  border-color: rgb(29 36 32 / 0.2);
+}
+.nhom07-ai3d-scope .border-ink\/5 {
+  border-color: rgb(29 36 32 / 0.05);
+}
+.nhom07-ai3d-scope .border-moss\/20 {
+  border-color: rgb(80 98 77 / 0.2);
+}
+.nhom07-ai3d-scope .bg-\[\#eeece5\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(238 236 229 / var(--tw-bg-opacity, 1));
+}
+.nhom07-ai3d-scope .bg-amber-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 251 235 / var(--tw-bg-opacity, 1));
+}
+.nhom07-ai3d-scope .bg-cream\/40 {
+  background-color: rgb(248 247 243 / 0.4);
+}
+.nhom07-ai3d-scope .bg-cream\/80 {
+  background-color: rgb(248 247 243 / 0.8);
+}
+.nhom07-ai3d-scope .bg-ink {
+  --tw-bg-opacity: 1;
+  background-color: rgb(29 36 32 / var(--tw-bg-opacity, 1));
+}
+.nhom07-ai3d-scope .bg-moss\/10 {
+  background-color: rgb(80 98 77 / 0.1);
+}
+.nhom07-ai3d-scope .bg-red-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 242 242 / var(--tw-bg-opacity, 1));
+}
+.nhom07-ai3d-scope .bg-sand\/40 {
+  background-color: rgb(232 223 210 / 0.4);
+}
+.nhom07-ai3d-scope .bg-white {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+}
+.nhom07-ai3d-scope .bg-white\/50 {
+  background-color: rgb(255 255 255 / 0.5);
+}
+.nhom07-ai3d-scope .bg-white\/70 {
+  background-color: rgb(255 255 255 / 0.7);
+}
+.nhom07-ai3d-scope .bg-white\/90 {
+  background-color: rgb(255 255 255 / 0.9);
+}
+.nhom07-ai3d-scope .p-3 {
+  padding: 0.75rem;
+}
+.nhom07-ai3d-scope .p-4 {
+  padding: 1rem;
+}
+.nhom07-ai3d-scope .p-6 {
+  padding: 1.5rem;
+}
+.nhom07-ai3d-scope .px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+.nhom07-ai3d-scope .px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.nhom07-ai3d-scope .px-8 {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+.nhom07-ai3d-scope .py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.nhom07-ai3d-scope .py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+.nhom07-ai3d-scope .py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+.nhom07-ai3d-scope .text-center {
+  text-align: center;
+}
+.nhom07-ai3d-scope .font-display {
+  font-family: "Playfair Display", serif;
+}
+.nhom07-ai3d-scope .text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.nhom07-ai3d-scope .text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+.nhom07-ai3d-scope .text-\[11px\] {
+  font-size: 11px;
+}
+.nhom07-ai3d-scope .text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+.nhom07-ai3d-scope .text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.nhom07-ai3d-scope .text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+.nhom07-ai3d-scope .text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+.nhom07-ai3d-scope .font-light {
+  font-weight: 300;
+}
+.nhom07-ai3d-scope .font-medium {
+  font-weight: 500;
+}
+.nhom07-ai3d-scope .font-semibold {
+  font-weight: 600;
+}
+.nhom07-ai3d-scope .leading-5 {
+  line-height: 1.25rem;
+}
+.nhom07-ai3d-scope .leading-6 {
+  line-height: 1.5rem;
+}
+.nhom07-ai3d-scope .text-amber-900 {
+  --tw-text-opacity: 1;
+  color: rgb(120 53 15 / var(--tw-text-opacity, 1));
+}
+.nhom07-ai3d-scope .text-ink {
+  --tw-text-opacity: 1;
+  color: rgb(29 36 32 / var(--tw-text-opacity, 1));
+}
+.nhom07-ai3d-scope .text-ink\/45 {
+  color: rgb(29 36 32 / 0.45);
+}
+.nhom07-ai3d-scope .text-ink\/50 {
+  color: rgb(29 36 32 / 0.5);
+}
+.nhom07-ai3d-scope .text-ink\/55 {
+  color: rgb(29 36 32 / 0.55);
+}
+.nhom07-ai3d-scope .text-ink\/60 {
+  color: rgb(29 36 32 / 0.6);
+}
+.nhom07-ai3d-scope .text-ink\/70 {
+  color: rgb(29 36 32 / 0.7);
+}
+.nhom07-ai3d-scope .text-moss {
+  --tw-text-opacity: 1;
+  color: rgb(80 98 77 / var(--tw-text-opacity, 1));
+}
+.nhom07-ai3d-scope .text-red-700 {
+  --tw-text-opacity: 1;
+  color: rgb(185 28 28 / var(--tw-text-opacity, 1));
+}
+.nhom07-ai3d-scope .text-red-800 {
+  --tw-text-opacity: 1;
+  color: rgb(153 27 27 / var(--tw-text-opacity, 1));
+}
+.nhom07-ai3d-scope .text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+.nhom07-ai3d-scope .shadow-sm {
+  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.nhom07-ai3d-scope .ring-offset-2 {
+  --tw-ring-offset-width: 2px;
+}
+.nhom07-ai3d-scope .backdrop-blur-sm {
+  --tw-backdrop-blur: blur(4px);
+  -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+  backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+}
+
+@keyframes nhom07-spin-slow { to { transform: rotate(360deg); } }
+.nhom07-ai3d-scope .animate-spin-slow { animation: nhom07-spin-slow 1.2s linear infinite; }
+.nhom07-ai3d-scope input[type='range'] { accent-color: #1d2420; }
+
+.nhom07-ai3d-scope .dashboard-launcher { left: max(1rem, env(safe-area-inset-left)); bottom: max(1rem, env(safe-area-inset-bottom)); }
+.nhom07-ai3d-scope body:has([aria-modal='true']) .dashboard-launcher { display: none; }
+.nhom07-ai3d-scope :focus-visible { outline: 2px solid #52624a; outline-offset: 3px; }
+.nhom07-ai3d-scope button:disabled { cursor: not-allowed; }
+.nhom07-ai3d-scope .hover\:bg-sand\/50:hover {
+  background-color: rgb(232 223 210 / 0.5);
+}
+.nhom07-ai3d-scope .disabled\:opacity-40:disabled {
+  opacity: 0.4;
+}
+.nhom07-ai3d-scope .disabled\:opacity-50:disabled {
+  opacity: 0.5;
+}
+.nhom07-ai3d-scope .aria-pressed\:ring-2[aria-pressed="true"] {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+.nhom07-ai3d-scope .aria-pressed\:ring-ink[aria-pressed="true"] {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(29 36 32 / var(--tw-ring-opacity, 1));
+}
+@media (min-width: 640px) {
+
+  .nhom07-ai3d-scope .sm\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+}
+@media (min-width: 1024px) {
+
+  .nhom07-ai3d-scope .lg\:min-h-\[660px\] {
+    min-height: 660px;
+  }
+
+  .nhom07-ai3d-scope .lg\:grid-cols-\[minmax\(0\2c 1fr\)_360px\] {
+    grid-template-columns: minmax(0,1fr) 360px;
+  }
+
+  .nhom07-ai3d-scope .lg\:py-12 {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+}
+.nhom07-ai3d-scope{font-family:Arial,sans-serif;background:#faf8f3;color:#1d2420;isolation:isolate;min-width:0;}
+.nhom07-ai3d-scope .font-display{font-family:Georgia,serif;}
+.nhom07-ai3d-scope canvas{display:block;}

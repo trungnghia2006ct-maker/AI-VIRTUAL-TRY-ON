@@ -39,3 +39,11 @@ coverage/
 
 # Local development analytics and integration-check data
 .data/
+
+# Local AI3D installer backups and licensed body/model assets
+.ai3d_backups/
+.nhom07_ai3d_install.json
+nhom07_ai3d/
+private_smpl/
+SMPL_python*/
+SMPL_python*.zip

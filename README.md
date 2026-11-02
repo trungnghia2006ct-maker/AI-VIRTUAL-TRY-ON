@@ -81,3 +81,11 @@ npm run start
 ```
 
 Hướng dẫn deploy Vercel từng bước: [docs/DEPLOY.md](docs/DEPLOY.md).
+
+## 9) Thử áo 3D theo chiều cao và cân nặng
+
+Nút **Thử 3D** mở `/thu-do-3d`: chọn Nam/Nữ, nhập cm/kg, tạo dáng ước lượng,
+xoay mô hình, đổi màu áo và tải GLB. Xem [hướng dẫn demo và dịch vụ model](docs/THU_DO_3D.md).
+
+Trang gọi `/api/nhom07-3d`; model chạy trong dịch vụ riêng. Push web lên GitHub
+hoặc deploy web chưa đủ để tạo mô hình nếu chưa cấu hình dịch vụ này.
