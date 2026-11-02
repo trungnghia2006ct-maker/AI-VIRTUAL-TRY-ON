@@ -1,12 +1,12 @@
 # Product analytics & feedback
 
-## Open and authorize
+## Open dashboard
 
-1. Set server-only `ADMIN_METRICS_PASSWORD` (minimum 12 characters, preferably a randomly generated 32+ character value) and `ANALYTICS_SECRET` (random, minimum 32 characters) in `.env.local` or deployment secrets.
+1. Set server-only `ANALYTICS_SECRET` (random, minimum 32 characters) in `.env.local` or deployment secrets.
 2. Start with `npm.cmd run dev` on Windows (`npm run dev` elsewhere).
-3. Click the **Dashboard** button, always visible at the bottom left. Unauthenticated visitors are redirected to `/admin/login`; authorized users open `/admin/metrics`. It collapses to an icon on small screens and hides while a modal is open.
+3. Click **Dashboard** at the bottom left to open `/admin/metrics` directly. The old `/admin/login` URL redirects there. The button collapses to an icon on small screens and hides while a modal is open.
 
-The project has no user-account/role system. It reuses the existing shared analytics-admin password; only give this credential to authorized administrators/analysts. All such users can see comments. The page checks a signed, expiring HttpOnly session cookie on the server; the analytics and legacy metrics APIs independently enforce the same authorization. A public request is redirected to login and an unauthenticated API call returns 401. Login/logout reject cross-origin requests; login is rate limited. Changing the password revokes existing sessions. Login expires after eight hours. The fixed button is not the access-control boundary.
+The dashboard and both analytics/legacy metrics GET APIs are public, including feedback comments. No admin password or session cookie is required. Database service-role credentials remain server-only and RLS remains enabled.
 
 ## Storage and migration
 
@@ -26,7 +26,7 @@ The project has no user-account/role system. It reuses the existing shared analy
 - Signed first-party anonymous cookie: 90-day absolute lifetime. Signed session cookie: 30 minutes inactivity, renewed by accepted events. No fingerprinting. First-touch source/landing are retained for the session. Query strings are never sent; UTM medium and referrer are reduced to a fixed category. Device is a coarse UA-derived category; raw UA and IP are not persisted.
 - Tracking skips admin and local metrics pages. Active time requires document visibility and focus and stops after 60 seconds with no key/pointer/scroll activity. It is flushed periodically and when the page hides. The client buffers at most 120 events in memory, retries transient errors with backoff, and may lose events on abrupt exits or extended offline periods.
 - Footer controls allow behavioral analytics to be disabled; DNT/GPC also disable it. Explicit feedback still works using the anonymous cookie. Browser opt-out does not delete already saved historical data.
-- No image, input value, arbitrary DOM text, full referrer, arbitrary URL, or typed form content is collected. Comments are intentionally user-entered and may contain sensitive text despite the UI reminder; access is restricted to analysts and follows the same retention policy.
+- No image, input value, arbitrary DOM text, full referrer, arbitrary URL, or typed form content is collected. Comments are intentionally user-entered and may contain sensitive text despite the UI reminder; comments are publicly visible on the dashboard and follow the same retention policy.
 
 ## Definitions and limits
 
@@ -68,10 +68,10 @@ node --test tests/analytics.test.mjs
 npm run build
 ```
 
-For API integration checks, stop other Next servers using the same `.next` directory. In a temporary shell, set a **test-only** `ADMIN_METRICS_PASSWORD`, a 32+ character `ANALYTICS_SECRET`, and `ANALYTICS_LOCAL_DIR=.data/analytics-integration-check-<unique-run>`. Leave Supabase variables unset. Start `next dev -p 3101`. In another shell set `ANALYTICS_TEST_PASSWORD` to the same test password and run:
+For API integration checks, stop other Next servers using the same `.next` directory. In a temporary shell, set a **test-only** 32+ character `ANALYTICS_SECRET`, and `ANALYTICS_LOCAL_DIR=.data/analytics-integration-check-<unique-run>`. Leave Supabase variables unset. Start `next dev -p 3101`. In another shell run:
 
 ```sh
 node tests/analytics-api.mjs
 ```
 
-Use a fresh test directory per run. The script checks authentication, server route protection, cross-origin rejection, input bounds, duplicate writes, optimistic conflicts, own-feedback isolation, funnel aggregation, filters, bot/burst exclusion and rate limits. It creates explicitly labeled synthetic feedback in the isolated test directory only. Stop that server before running a build or restarting the normal app. Supabase RPCs must also be applied and exercised in a staging database before production; local integration checks do not certify a remote database migration.
+Use a fresh test directory per run. The script checks public dashboard/API access, legacy login redirect, cross-origin rejection, input bounds, duplicate writes, optimistic conflicts, own-feedback isolation, funnel aggregation, filters, bot/burst exclusion and rate limits. It creates explicitly labeled synthetic feedback in the isolated test directory only. Stop that server before running a build or restarting the normal app. Supabase RPCs must also be applied and exercised in a staging database before production; local integration checks do not certify a remote database migration.
