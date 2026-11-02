@@ -8,9 +8,12 @@ import { randomUUID } from 'node:crypto';
 function load(file) {
   const source = readFileSync(new URL(file, import.meta.url),'utf8');
   const output = ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2020}}).outputText;
-  const exports = {}; new Function('exports',output)(exports); return exports;
+  // Only sibling pure modules may be required; anything else would mean a runtime dependency slipped in.
+  const localRequire = name => { if (name === './ftqs') return load('../lib/ftqs.ts'); throw new Error(`Unexpected import in pure module: ${name}`); };
+  const exports = {}; new Function('exports','require',output)(exports,localRequire); return exports;
 }
 const { summarize, ratio } = load('../lib/analytics-summary.ts');
+const { ftqsComposite, ftqsGateFailed, ftqsAccepted, wilson, FTQS_DIMENSIONS } = load('../lib/ftqs.ts');
 const { isClientEvent } = load('../lib/analytics-schema.ts');
 const now = Date.parse('2026-11-01T12:00:00Z');
 const day = 86400000;
@@ -55,4 +58,61 @@ test('filters affect feedback; global invalid-request counters remain explicitly
   const data=dataset([event()]); data.feedback=[{...base,id:'f',at:new Date(now-1000).toISOString(),rating:'up',comment:'hello',feature:'cart'}]; data.quality=[{at:new Date(now-1000).toISOString(),reason:'invalid',count:3}];
   const result=summarize(data,{...filters,feature:'tryon'},now);
   assert.equal(result.feedback.total,0); assert.equal(result.quality.counters[0].count,3);
+});
+
+// FTQS: fixtures below are synthetic and exist only inside these tests; they are never inserted into the dashboard.
+const all = value => Object.fromEntries(FTQS_DIMENSIONS.map(d => [d.key, value]));
+const ftqsRow = (extra = {}) => ({...base,id:randomUUID(),resultId:randomUUID(),at:new Date(now-60000).toISOString(),page:'/',productId:'linen-jacket-loose',color:'Beige',size:'M',provider:'gemini',promptVersion:'tryon-gemini@1.0.0',scores:all(5),suspect:null,...extra});
+test('FTQS composite follows the documented weights and needs all six dimensions',()=>{
+  assert.equal(ftqsComposite(all(5)),100);
+  assert.equal(ftqsComposite(all(1)),0);
+  assert.equal(ftqsComposite({identity:4,garment:3,fit:4,body:5,scene:4,trust:3}),71.25);
+  assert.equal(ftqsComposite({identity:5,garment:5}),null);
+  assert.equal(ftqsComposite({...all(5),fit:6}),null);
+  assert.equal(FTQS_DIMENSIONS.reduce((sum,d)=>sum+d.weight,0),100);
+});
+test('critical gate rejects an otherwise high score and applies to partial ratings too',()=>{
+  const gated={...all(5),identity:1};
+  assert.equal(ftqsComposite(gated),80); assert.equal(ftqsGateFailed(gated),true); assert.equal(ftqsAccepted(gated),false);
+  assert.equal(ftqsGateFailed({scene:1,trust:1,fit:1}),false);
+  assert.equal(ftqsGateFailed({body:1}),true);
+  assert.equal(ftqsAccepted({identity:5}),null);
+  assert.equal(ftqsAccepted({...all(4)}),true);
+});
+test('Wilson interval is conservative for small samples and null for empty samples',()=>{
+  assert.equal(wilson(0,0),null);
+  const interval=wilson(5,5); assert.equal(interval.high,100); assert.ok(interval.low>50&&interval.low<60);
+});
+test('FTQS summary is empty, not zero, when nobody has rated',()=>{
+  const result=summarize(dataset([event()]),filters,now).ftqs;
+  assert.equal(result.total,0); assert.equal(result.composite.mean,null); assert.equal(result.acceptance.percent,null);
+  assert.equal(result.dimensions[0].mean,null); assert.deepEqual(result.byProvider,[]);
+});
+test('FTQS summary aggregates dimensions, acceptance, providers and prompt versions',()=>{
+  const data=dataset([event()]);
+  data.ftqs=[
+    ftqsRow(),
+    ftqsRow({scores:all(4),provider:'huggingface',promptVersion:'tryon-huggingface@1.0.0'}),
+    ftqsRow({scores:{...all(5),identity:1},provider:'huggingface',promptVersion:'tryon-huggingface@1.0.0'}),
+    ftqsRow({scores:{identity:3,garment:3},promptVersion:null}),
+  ];
+  const result=summarize(data,filters,now).ftqs;
+  assert.equal(result.total,4); assert.equal(result.complete,3);
+  assert.deepEqual(result.acceptance.percent,66.7); assert.equal(result.acceptance.count,2); assert.equal(result.acceptance.sample,3);
+  assert.deepEqual(result.gateFailures,{count:1,sample:4,percent:25});
+  const identity=result.dimensions.find(d=>d.key==='identity');
+  assert.equal(identity.sample,4); assert.equal(identity.mean,3.3); assert.equal(identity.median,3.5);
+  assert.equal(result.dimensions.find(d=>d.key==='trust').sample,3);
+  assert.deepEqual(result.byProvider.map(r=>[r.label,r.total]),[['gemini',2],['huggingface',2]]);
+  assert.equal(result.byProvider[1].acceptance.percent,50);
+  assert.ok(result.byPromptVersion.some(r=>r.label==='Không rõ'));
+});
+test('FTQS respects time, device, suspect-session and feature filters',()=>{
+  const data=dataset([event()]);
+  data.ftqs=[ftqsRow(),ftqsRow({at:new Date(now-40*day).toISOString()}),ftqsRow({device:'mobile'}),ftqsRow({session:'bot-session',suspect:'bot'}),ftqsRow({session:'bot-session'})];
+  assert.equal(summarize(data,filters,now).ftqs.total,2);
+  assert.equal(summarize(data,{...filters,device:'mobile'},now).ftqs.total,1);
+  assert.equal(summarize(data,{...filters,days:90},now).ftqs.total,3);
+  assert.equal(summarize(data,{...filters,feature:'tryon'},now).ftqs.total,2);
+  assert.equal(summarize(data,{...filters,feature:'cart'},now).ftqs.total,0);
 });

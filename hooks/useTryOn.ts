@@ -17,6 +17,8 @@ export interface TryOnState {
   resultImageUrl: string | null;
   provider: TryOnProvider | null;
   promptVersion: string | null;
+  // Mã định danh riêng của từng kết quả, để mỗi ảnh chỉ được chấm FTQS một lần.
+  resultId: string | null;
   error: string | null;
   inferenceTimeMs: number | null;
 }
@@ -27,6 +29,7 @@ const INITIAL_STATE: TryOnState = {
   resultImageUrl: null,
   provider: null,
   promptVersion: null,
+  resultId: null,
   error: null,
   inferenceTimeMs: null,
 };
@@ -149,6 +152,7 @@ export function useTryOn() {
         resultImageUrl: result.image,
         provider: result.provider,
         promptVersion: result.promptVersion,
+        resultId: crypto.randomUUID(),
         error: null,
         inferenceTimeMs,
       });

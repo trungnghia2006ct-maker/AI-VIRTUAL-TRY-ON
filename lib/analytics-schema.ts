@@ -1,3 +1,5 @@
+import type { FtqsScores } from './ftqs';
+
 export const PAGES = ['/', '/products', '/cart', '/privacy'] as const;
 export const FEATURES = ['page', 'navigation', 'catalog', 'tryon', 'cart'] as const;
 export const SOURCES = ['direct', 'search', 'social', 'email', 'campaign', 'referral'] as const;
@@ -50,7 +52,22 @@ export interface Quality {
   reason: 'invalid' | 'rate_limited' | 'duplicate_event' | 'duplicate_feedback';
   count: number;
 }
-export interface Dataset { events: StoredEvent[]; feedback: Feedback[]; quality: Quality[] }
+// Một lượt chấm FTQS cho một kết quả thử đồ. Không chứa ảnh; id suy ra từ visitor + resultId nên mỗi kết quả chỉ chấm một lần.
+export interface FtqsRating extends Context {
+  id: string;
+  resultId: string;
+  at: string;
+  page: Page;
+  productId: string;
+  color: string;
+  size: string;
+  provider: 'gemini' | 'huggingface';
+  promptVersion: string | null;
+  scores: FtqsScores;
+  suspect: 'bot' | null;
+}
+// ftqs là tùy chọn vì dữ liệu cục bộ cũ và test không có trường này.
+export interface Dataset { events: StoredEvent[]; feedback: Feedback[]; quality: Quality[]; ftqs?: FtqsRating[] }
 export interface Filters { days: 7 | 30 | 90; page: string; feature: string; source: string; device: string }
 export const uuid = (v: unknown): v is string => typeof v === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v);
 export const record = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);

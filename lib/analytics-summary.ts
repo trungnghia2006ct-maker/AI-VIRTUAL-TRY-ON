@@ -1,7 +1,34 @@
-import type { Dataset, Feedback, Filters, StoredEvent } from './analytics-schema';
+import type { Dataset, Feedback, Filters, FtqsRating, StoredEvent } from './analytics-schema';
+import { FTQS_ACCEPT_THRESHOLD, FTQS_DIMENSIONS, ftqsAccepted, ftqsComposite, ftqsGateFailed, isScore, mean, median, wilson } from './ftqs';
 
 const DAY = 86400000;
 export function ratio(count: number, sample: number) { return { count, sample, percent: sample ? Math.round(count / sample * 1000) / 10 : null }; }
+// Chỉ các lượt chấm đủ 6 khía cạnh mới có FTQS tổng và được xét chấp nhận; chấm thiếu vẫn đóng góp vào điểm từng khía cạnh.
+function summarizeFtqs(rows: FtqsRating[]) {
+  const complete = rows.filter(r => ftqsComposite(r.scores) !== null);
+  const accepted = (list: FtqsRating[]) => list.filter(r => ftqsAccepted(r.scores)).length;
+  const acceptance = (list: FtqsRating[]) => ({ ...ratio(accepted(list), list.length), ci: wilson(accepted(list), list.length) });
+  const group = (key: (r: FtqsRating) => string) => [...new Set(rows.map(key))].sort().map(label => {
+    const members = rows.filter(r => key(r) === label);
+    const done = members.filter(r => ftqsComposite(r.scores) !== null);
+    return { label, total: members.length, composite: { sample: done.length, mean: mean(done.map(r => ftqsComposite(r.scores)!)) }, acceptance: acceptance(done) };
+  });
+  const composites = complete.map(r => ftqsComposite(r.scores)!);
+  return {
+    threshold: FTQS_ACCEPT_THRESHOLD,
+    total: rows.length,
+    complete: complete.length,
+    dimensions: FTQS_DIMENSIONS.map(d => {
+      const values = rows.map(r => r.scores[d.key]).filter(isScore);
+      return { key: d.key, code: d.code, label: d.label, weight: d.weight, gate: d.gate, sample: values.length, mean: mean(values), median: median(values), top2: ratio(values.filter(v => v >= 4).length, values.length) };
+    }),
+    composite: { sample: composites.length, mean: mean(composites), median: median(composites) },
+    gateFailures: ratio(rows.filter(r => ftqsGateFailed(r.scores)).length, rows.length),
+    acceptance: acceptance(complete),
+    byProvider: group(r => r.provider),
+    byPromptVersion: group(r => r.promptVersion || 'Không rõ'),
+  };
+}
 function unique<T>(rows: T[], key: (x: T) => string) { return new Set(rows.map(key)).size; }
 function counts<T>(rows: T[], key: (x: T) => string) {
   const map = new Map<string, number>();
@@ -11,10 +38,11 @@ function counts<T>(rows: T[], key: (x: T) => string) {
 export function summarize(data: Dataset, filters: Filters, now = Date.now()) {
   const start = now - filters.days * DAY;
   const inTime = (x: { at: string }) => Date.parse(x.at) >= start && Date.parse(x.at) <= now;
-  const context = (x: StoredEvent | Feedback) => (!filters.page || x.page === filters.page) && (!filters.source || x.source === filters.source) && (!filters.device || x.device === filters.device);
+  const context = (x: StoredEvent | Feedback | FtqsRating) => (!filters.page || x.page === filters.page) && (!filters.source || x.source === filters.source) && (!filters.device || x.device === filters.device);
   // A flagged session is excluded as a whole, rather than silently mixing its earlier events.
   const suspectSessions = new Set(data.events.filter(e => e.suspect).map(e => e.session));
   data.feedback.filter(f => f.suspect).forEach(f => suspectSessions.add(f.session));
+  (data.ftqs ?? []).filter(f => f.suspect).forEach(f => suspectSessions.add(f.session));
   const clean = data.events.filter(e => !suspectSessions.has(e.session));
   const candidates = clean.filter(e => inTime(e) && context(e));
   const featureViews = new Set(candidates.filter(e => e.feature === filters.feature).map(e => e.view));
@@ -25,6 +53,8 @@ export function summarize(data: Dataset, filters: Filters, now = Date.now()) {
   const clicks = events.filter(e => e.kind === 'click');
   const conversions = events.filter(e => e.kind === 'conversion');
   const feedback = data.feedback.filter(f => !suspectSessions.has(f.session) && inTime(f) && context(f) && (!filters.feature || f.feature === filters.feature));
+  // FTQS chỉ đánh giá luồng thử đồ nên bộ lọc tính năng khác 'tryon' cho kết quả rỗng.
+  const ftqsRows = (data.ftqs ?? []).filter(f => !suspectSessions.has(f.session) && inTime(f) && context(f) && (!filters.feature || filters.feature === 'tryon'));
   const duration = new Map<string, number>();
   events.filter(e => e.kind === 'engagement' && viewIds.has(e.view)).forEach(e => duration.set(e.view, (duration.get(e.view) || 0) + (e.value || 0)));
   const meaningful = new Set(events.filter(e => e.kind === 'conversion' || e.kind === 'click').map(e => e.session));
@@ -67,6 +97,7 @@ export function summarize(data: Dataset, filters: Filters, now = Date.now()) {
     feedback: { total: feedback.length, up: ratio(feedback.filter(f => f.rating === 'up').length, feedback.length), down: ratio(feedback.filter(f => f.rating === 'down').length, feedback.length), reasons: counts(feedback.filter(f => f.rating === 'down'), f => f.reason || 'Không rõ'), byPage: counts(feedback, f => `${f.page} · ${f.feature} · ${f.rating === 'up' ? '👍' : '👎'}`), trend: counts(feedback, f => `${f.at.slice(0,10)} · ${f.rating === 'up' ? '👍' : '👎'}`).sort((a,b) => b.label.localeCompare(a.label)), comments: feedback.filter(f => f.comment).sort((a,b) => b.at.localeCompare(a.at)).slice(0,100).map(({ id, at, page, feature, rating, comment }) => ({ id, at, page, feature, rating, comment })) },
     quality: { excludedEvents: excluded.length, suspectSessions: unique(excluded, e => e.session), botEvents: excluded.filter(e => e.suspect === 'bot').length, abnormalClicks: excluded.filter(e => e.suspect === 'burst').length, excludedFeedback: data.feedback.filter(f => inTime(f) && context(f) && (!filters.feature || f.feature === filters.feature) && suspectSessions.has(f.session)).length, counters: counts(data.quality.filter(inTime).flatMap(q => [{ reason: q.reason, count: q.count }]), q => q.reason).map(row => ({ ...row, count: data.quality.filter(q => inTime(q) && q.reason === row.label).reduce((n,q) => n+q.count,0) })) },
     retention,
+    ftqs: summarizeFtqs(ftqsRows),
   };
 }
 export type AnalyticsSummary = ReturnType<typeof summarize>;

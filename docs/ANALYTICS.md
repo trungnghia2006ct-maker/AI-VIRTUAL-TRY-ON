@@ -11,7 +11,8 @@ The dashboard and both analytics/legacy metrics GET APIs are public, including f
 ## Storage and migration
 
 - With `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`, apply [the product analytics migration](../supabase/migrations/20261101010000_product_analytics.sql). Apply [the earlier migration](../supabase/migrations/20261026010000_tryon_feedback_metrics.sql) if legacy try-on metrics are needed.
-- New tables: `product_events`, `product_feedback`, `product_quality`. RLS is enabled, public/anon/authenticated table and function privileges are revoked, only the server service role can read/write. Secrets never use `NEXT_PUBLIC_`.
+- For the FTQS panel (section 08) also apply [the FTQS migration](../supabase/migrations/20261102010000_ftqs_ratings.sql). It adds `product_ftqs` and extends `prune_product_analytics()`. Until it is applied, the dashboard still loads and shows a notice in section 08 instead of failing.
+- New tables: `product_events`, `product_feedback`, `product_quality`, `product_ftqs`. RLS is enabled, public/anon/authenticated table and function privileges are revoked, only the server service role can read/write. Secrets never use `NEXT_PUBLIC_`.
 - Events use unique UUIDs and natural deduplication for page views, scroll milestones and CTA exposure. Feedback uses a server-derived key per anonymous visitor/page/feature, optimistic revisions and a stable request UUID. The SQL RPC serializes concurrent edits; retrying a successful request cannot create another opinion or overwrite a newer revision.
 - Without Supabase, **development only** uses `.data/analytics/data.json`, excluded from Git. `ANALYTICS_LOCAL_DIR` overrides the directory for isolated checks. Writes are serialized within the single Node process and committed with an atomic rename. This fallback is not suitable for multiple processes or serverless production; production fails closed with 503 instead of silently using local storage.
 - Development storage is capped at 20,000 total rows. It refuses new writes with 503 when full. The Supabase reader is capped at 20,000 rows per table; overflow is explicitly marked as a partial sample and retention is disabled. Move aggregation to indexed SQL for larger deployments.
@@ -21,6 +22,7 @@ The dashboard and both analytics/legacy metrics GET APIs are public, including f
 
 - `POST /api/analytics/events`: bounded batches of page views, allowlisted component clicks/exposures, scroll milestones 25/50/75/100, active milliseconds, and client-observed goals.
 - `GET/POST /api/analytics/feedback`: load the current browser's own opinion or save/update it. 👍/👎, required reason for 👎, optional 500-character comment. Feedback is also available after a successful try-on. Retrying retains the same idempotency key; editing in another tab gives a conflict and a reload action.
+- `POST /api/analytics/ftqs`: one optional detailed rating per visitor per try-on result (see FTQS below). No image is stored.
 - Signed first-party anonymous cookie: 90-day absolute lifetime. Signed session cookie: 30 minutes inactivity, renewed by accepted events. No fingerprinting. First-touch source/landing are retained for the session. Query strings are never sent; UTM medium and referrer are reduced to a fixed category. Device is a coarse UA-derived category; raw UA and IP are not persisted.
 - Tracking skips admin and local metrics pages. Active time requires document visibility and focus and stops after 60 seconds with no key/pointer/scroll activity. It is flushed periodically and when the page hides. The client buffers at most 120 events in memory, retries transient errors with backoff, and may lose events on abrupt exits or extended offline periods.
 - Footer controls allow behavioral analytics to be disabled; DNT/GPC also disable it. Explicit feedback still works using the anonymous cookie. Browser opt-out does not delete already saved historical data.
@@ -37,6 +39,26 @@ The dashboard and both analytics/legacy metrics GET APIs are public, including f
 - D1/W1/M1: cohort first seen in the selected period, returning in `[1,2)`, `[7,14)`, `[30,60)` days after first seen respectively. A visitor enters the denominator only after the full observation window. Feature filters constrain cohort membership; return visits respect page/source/device filters. Empty or immature cohorts produce “not enough data,” not 0%.
 - Bot suspicion uses UA patterns, missing UA, and bursts over 30 clicks/10 seconds. Entire flagged sessions are excluded from main metrics, including earlier events and feedback. This heuristic can have false positives/negatives. Invalid/rate-limited requests and duplicate requests are counted separately for the whole site in the period (they cannot reliably use page/feature filters). A duplicate is often a retry, not spam.
 - Rate limits use the existing in-memory limiter: 120 event batches/minute/IP, 30 feedback writes/minute/IP, 60 feedback reads/minute/IP, plus existing login limits. IPs are hashed in memory; client proxy headers must be overwritten by a trusted deployment proxy. For multi-instance deployments use shared atomic rate limiting. Counters are best effort if storage itself is unavailable. These controls do not establish that traffic is human.
+
+## FTQS (Fashion Try-On Quality Scale)
+
+FTQS is a scale proposed by the project team, **not** an industry standard. Visitors may rate a try-on result on six dimensions, 1-5 each, from the result screen. Definitions, weights and the acceptance threshold live in one place: [`lib/ftqs.ts`](../lib/ftqs.ts).
+
+| Code | Dimension | Weight | Critical gate |
+|---|---|---|---|
+| D1 | Identity preservation | 20 | yes |
+| D2 | Garment fidelity | 25 | yes |
+| D3 | Fit realism | 25 | no |
+| D4 | Body integrity | 15 | yes |
+| D5 | Scene consistency | 10 | no |
+| D6 | Purchase confidence | 5 | no |
+
+- **FTQS (0-100)** = sum over dimensions of `(score - 1) / 4 * weight`. It is computed only for ratings that answered all six dimensions; partial ratings still count in the per-dimension statistics and are never extrapolated.
+- **Critical gate:** a score of 1 on D1, D2 or D4 rejects the image regardless of the composite.
+- **Accepted** = complete rating, no gate failure and FTQS >= 70 (`FTQS_ACCEPT_THRESHOLD`). The acceptance rate is shown with a 95% Wilson interval because samples are small.
+- Breakdowns by provider and by prompt version use the `provider`/`promptVersion` recorded with each rating. The feature filter other than `tryon` yields no FTQS rows; period, page, source, device and suspect-session exclusion apply as for feedback.
+- Ratings are self-reported by visitors, so they are subjective and there is no inter-rater agreement metric. Weights and threshold are team decisions and should be justified in the report.
+- Storage: table `product_ftqs` (`id` derived from visitor + result, so each result is rated once). The dashboard shows "not enough data" until ratings exist; no sample data is inserted. Unit tests use synthetic fixtures that live only in `tests/analytics.test.mjs`.
 
 ## Checks
 

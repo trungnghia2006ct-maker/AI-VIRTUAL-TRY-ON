@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Download, ShoppingBag, Sparkles } from 'lucide-react';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { AiDisclaimer } from '@/components/tryon/AiDisclaimer';
+import { FtqsForm } from '@/components/tryon/FtqsForm';
 import type { Product } from '@/types/product';
 import type { TryOnProvider } from '@/types/virtual-try-on';
 
@@ -17,6 +18,7 @@ interface ResultViewProps {
   inferenceTimeMs: number | null;
   provider: TryOnProvider | null;
   promptVersion: string | null;
+  resultId: string | null;
   onColorChange: (color: string) => void;
   onSizeChange: (size: string) => void;
   onRetry: () => void;
@@ -35,6 +37,7 @@ export function ResultView({
   inferenceTimeMs,
   provider,
   promptVersion,
+  resultId,
   onColorChange,
   onSizeChange,
   onRetry,
@@ -171,6 +174,19 @@ export function ResultView({
             </select>
           </label>
           <div className="mt-5"><FeedbackWidget feature="tryon" title="Kết quả này hữu ích không?" /></div>
+          {provider && resultId && (
+            <div className="mt-4">
+              <FtqsForm
+                key={resultId}
+                resultId={resultId}
+                productId={product.id}
+                color={color}
+                size={size}
+                provider={provider}
+                promptVersion={promptVersion}
+              />
+            </div>
+          )}
           <button type="button" data-analytics="download" data-analytics-feature="tryon" onClick={download} className="btn-secondary mt-5 w-full py-3"><Download size={17} /> Lưu ảnh</button>
           {downloadError && <p role="alert" className="mt-2 text-xs text-red-700">{downloadError}</p>}
           <button type="button" data-analytics="add-to-cart" data-analytics-feature="cart" onClick={onAddToCart} className="btn-secondary mt-3 w-full py-3"><ShoppingBag size={17} /> Thêm vào giỏ</button>
