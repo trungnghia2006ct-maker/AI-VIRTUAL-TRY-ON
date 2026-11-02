@@ -38,6 +38,7 @@ export default function PrivacyPage() {
             'Ảnh bạn tải lên hoặc chọn người mẫu: chỉ dùng để tạo kết quả thử đồ và được gửi đến nhà cung cấp AI (mục 3).',
             'Thông tin thử đồ: mã sản phẩm, màu, kích thước, nhà cung cấp AI, phiên bản prompt, thời lượng xử lý và trạng thái thành công hoặc lỗi.',
             'Đánh giá của bạn: 👍/👎, lý do và nhận xét tùy chọn tối đa 500 ký tự (đừng nhập thông tin cá nhân). Phản hồi được gắn với mã cookie ngẫu nhiên để cập nhật thay vì ghi trùng; chỉ người có quyền quản trị phân tích xem được nhận xét.',
+            'Đánh giá chi tiết chất lượng ảnh (tùy chọn): điểm từ 1 đến 5 cho từng tiêu chí (giữ danh tính, màu và chi tiết áo, độ vừa vặn, lỗi cơ thể, nền và ánh sáng, độ tin cậy), kèm sản phẩm, màu, kích thước, nhà cung cấp AI và phiên bản prompt. Mỗi kết quả được chấm một lần, gắn với mã cookie ngẫu nhiên. Ảnh của bạn không được lưu cùng đánh giá.',
             'Phân tích hành vi: cookie mã ngẫu nhiên tối đa 90 ngày, phiên 30 phút. Ghi trang đã xem (không có tham số URL), nhóm nguồn truy cập, loại thiết bị, nhấp vào thành phần đã chọn, độ sâu cuộn, thời gian tab hoạt động và các bước thử đồ/giỏ hàng. Không lưu IP, toàn bộ User-Agent, nội dung biểu mẫu hay ảnh vào analytics.',
             'Chiều cao và cân nặng (tùy chọn): chỉ dùng trên trình duyệt để gợi ý kích thước, không gửi đến máy chủ.',
             'Địa chỉ IP: được giữ tạm trong bộ nhớ máy chủ để giới hạn số lượt thử, không ghi vào cơ sở dữ liệu. Nền tảng lưu trữ có thể ghi nhật ký truy cập theo cơ chế riêng của họ.',

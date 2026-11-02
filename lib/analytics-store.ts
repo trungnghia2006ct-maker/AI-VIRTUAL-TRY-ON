@@ -3,7 +3,7 @@ import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { createSupabaseAdminClient } from './supabase-admin';
-import type { Dataset, Feedback, Quality, StoredEvent } from './analytics-schema';
+import type { Dataset, Feedback, FtqsRating, Quality, StoredEvent } from './analytics-schema';
 
 const LIMIT = 20000;
 const DAY = 86400000;
@@ -17,16 +17,17 @@ async function local<T>(operation: (data: Dataset) => T, write = true): Promise<
   const job = (state.analyticsWrite || Promise.resolve()).catch(() => {}).then(async () => {
     const directory = path.resolve(process.env.ANALYTICS_LOCAL_DIR || '.data/analytics');
     const file = path.join(directory, 'data.json');
-    let data: Dataset = { events: [], feedback: [], quality: [] };
+    let data: Dataset = { events: [], feedback: [], quality: [], ftqs: [] };
     try { data = JSON.parse(await readFile(file, 'utf8')) as Dataset; }
     catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }
     const cutoff = new Date(Date.now() - 90 * DAY).toISOString();
     data.events = data.events.filter(x => x.at >= cutoff);
     data.feedback = data.feedback.filter(x => x.at >= cutoff);
     data.quality = data.quality.filter(x => x.at >= cutoff);
+    data.ftqs = (data.ftqs || []).filter(x => x.at >= cutoff);
     const result = operation(data);
     if (write) {
-      if (data.events.length + data.feedback.length + data.quality.length > LIMIT) throw new Error('Local analytics capacity reached.');
+      if (data.events.length + data.feedback.length + data.quality.length + (data.ftqs?.length || 0) > LIMIT) throw new Error('Local analytics capacity reached.');
       await mkdir(directory, { recursive: true });
       const temporary = `${file}.${randomUUID()}.tmp`;
       await writeFile(temporary, JSON.stringify(data), { mode: 0o600 });
@@ -63,6 +64,19 @@ export async function saveFeedback(feedback: Feedback, expectedRevision: number)
   if (error) throw error;
   return data as 'saved' | 'duplicate' | 'conflict';
 }
+// Mỗi (visitor, kết quả) chỉ có một lượt chấm; gửi lại trả 'duplicate' thay vì ghi đè.
+export async function saveFtqs(rating: FtqsRating): Promise<'saved' | 'duplicate'> {
+  if (storageMode() === 'local-development') return local(data => {
+    const rows = data.ftqs ||= [];
+    if (rows.some(x => x.id === rating.id)) return 'duplicate';
+    rows.push(rating);
+    return 'saved';
+  });
+  const { error } = await createSupabaseAdminClient().from('product_ftqs').insert({ id: rating.id, occurred_at: rating.at, data: rating });
+  if (!error) return 'saved';
+  if (error.code === '23505') return 'duplicate';
+  throw error;
+}
 export async function readFeedback(id: string): Promise<Feedback | null> {
   if (storageMode() === 'local-development') return local(data => data.feedback.find(x => x.id === id) || null, false);
   const { data, error } = await createSupabaseAdminClient().from('product_feedback').select('data').eq('id', id).maybeSingle();
@@ -79,21 +93,26 @@ export async function quality(reason: Quality['reason'], count = 1) {
     }
   } catch { console.error('Analytics quality counter could not be persisted.'); }
 }
-export async function readDataset(): Promise<{ data: Dataset; truncated: boolean; mode: string }> {
+export async function readDataset(): Promise<{ data: Dataset; truncated: boolean; mode: string; ftqsAvailable: boolean }> {
   const mode = storageMode();
-  if (mode === 'local-development') return { data: await local(data => data, false), truncated: false, mode };
+  if (mode === 'local-development') return { data: await local(data => data, false), truncated: false, mode, ftqsAvailable: true };
   const db = createSupabaseAdminClient();
   const cutoff = new Date(Date.now() - 90 * DAY).toISOString();
-  async function read(table: string) {
+  // Bảng FTQS thiếu (chưa chạy migration) không được làm hỏng toàn bộ dashboard.
+  let ftqsAvailable = true;
+  async function read(table: string, optional = false) {
     const rows: unknown[] = [];
     for (let from = 0; from <= LIMIT; from += 1000) {
       const { data, error } = await db.from(table).select('data').gte('occurred_at', cutoff).order('occurred_at', { ascending: false }).order('id').range(from, from + 999);
-      if (error) throw error;
+      if (error) {
+        if (optional && (error.code === '42P01' || error.code === 'PGRST205')) { ftqsAvailable = false; return []; }
+        throw error;
+      }
       rows.push(...data.map(x => x.data));
       if (data.length < 1000) break;
     }
     return rows;
   }
-  const [events, feedback, counters] = await Promise.all([read('product_events'), read('product_feedback'), read('product_quality')]);
-  return { data: { events: events.slice(0, LIMIT) as StoredEvent[], feedback: feedback.slice(0, LIMIT) as Feedback[], quality: counters.slice(0, LIMIT) as Quality[] }, truncated: [events, feedback, counters].some(x => x.length > LIMIT), mode };
+  const [events, feedback, counters, ftqs] = await Promise.all([read('product_events'), read('product_feedback'), read('product_quality'), read('product_ftqs', true)]);
+  return { data: { events: events.slice(0, LIMIT) as StoredEvent[], feedback: feedback.slice(0, LIMIT) as Feedback[], quality: counters.slice(0, LIMIT) as Quality[], ftqs: ftqs.slice(0, LIMIT) as FtqsRating[] }, truncated: [events, feedback, counters, ftqs].some(x => x.length > LIMIT), mode, ftqsAvailable };
 }
