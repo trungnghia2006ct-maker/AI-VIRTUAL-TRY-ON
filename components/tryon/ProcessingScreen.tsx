@@ -2,14 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { LockKeyhole, Sparkles } from 'lucide-react';
+import { getProviderLabel } from '@/lib/tryon-provider-labels';
 import type { TryOnStatus } from '@/hooks/useTryOn';
+import type { TryOnProvider } from '@/types/virtual-try-on';
 
 interface ProcessingScreenProps {
   status: Extract<TryOnStatus, 'uploading' | 'processing'>;
+  provider: TryOnProvider | null;
   onCancel: () => void;
 }
 
-export function ProcessingScreen({ status, onCancel }: ProcessingScreenProps) {
+export function ProcessingScreen({ status, provider, onCancel }: ProcessingScreenProps) {
   const [progress, setProgress] = useState(5);
 
   useEffect(() => {
@@ -32,7 +35,7 @@ export function ProcessingScreen({ status, onCancel }: ProcessingScreenProps) {
       <p className="mt-3 max-w-md text-sm leading-6 text-ink/60">
         {status === 'uploading'
           ? 'Ảnh được nén trực tiếp trên thiết bị trước khi gửi đi.'
-          : 'Gemini đang tạo ảnh thử đồ của bạn.'}
+          : `Hệ thống đang tạo ảnh thử đồ của bạn qua ${getProviderLabel(provider)}.`}
       </p>
       <div
         className="mt-7 h-2 w-full max-w-md overflow-hidden rounded-full bg-sand"
@@ -46,7 +49,7 @@ export function ProcessingScreen({ status, onCancel }: ProcessingScreenProps) {
       </div>
       <div className="mt-7 flex max-w-md items-center gap-3 rounded-xl bg-clay/10 px-4 py-3 text-left">
         <LockKeyhole className="shrink-0 text-clay" size={19} />
-        <p className="text-xs leading-5 text-ink/75">Ảnh được gửi an toàn đến Gemini API và không lưu trong cơ sở dữ liệu của ứng dụng.</p>
+        <p className="text-xs leading-5 text-ink/75">Ảnh được gửi đến {getProviderLabel(provider)} và không lưu trong cơ sở dữ liệu của ứng dụng.</p>
       </div>
       <button type="button" onClick={onCancel} className="btn-secondary mt-7 py-3">Hủy</button>
     </div>

@@ -8,6 +8,7 @@ interface TryOnMetric {
   color: string;
   provider: TryOnProvider;
   outcome: 'success' | 'error';
+  promptVersion: string;
   durationMs: number;
 }
 
@@ -19,6 +20,7 @@ export async function recordTryOnMetric(metric: TryOnMetric): Promise<void> {
       color: metric.color,
       provider: metric.provider,
       outcome: metric.outcome,
+      prompt_version: metric.promptVersion,
       duration_ms: metric.durationMs,
     });
     if (error) {

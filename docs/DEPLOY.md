@@ -30,13 +30,13 @@ Nếu chưa có remote: tạo repo trống trên GitHub rồi `git remote add or
 Không dùng tiền tố `NEXT_PUBLIC_` cho khóa API. Redeploy sau khi thay đổi biến môi trường.
 Provider Hugging Face hiện kết nối Space [yisol/IDM-VTON](https://huggingface.co/spaces/yisol/IDM-VTON) qua `/tryon`; thời gian và khả năng xử lý phụ thuộc trạng thái Space, hàng chờ và quota GPU.
 
-Chạy migration `supabase/migrations/20261026010000_tryon_feedback_metrics.sql` trong Supabase SQL Editor trước khi dùng API feedback hoặc `/admin/metrics`. Dashboard được bảo vệ bằng mật khẩu server-side; metrics và feedback chỉ lưu metadata, không lưu ảnh.
+Chạy lần lượt `supabase/migrations/20261026010000_tryon_feedback_metrics.sql` rồi `supabase/migrations/20261031010000_tryon_prompt_version.sql` trong Supabase SQL Editor, **trước khi deploy code mới**, để dùng API feedback hoặc `/admin/metrics`. Dashboard được bảo vệ bằng mật khẩu server-side; metrics và feedback chỉ lưu metadata, không lưu ảnh.
 
 ## 4) Test preview trên điện thoại
 
 1. Mở URL Preview (`*.vercel.app`) trên điện thoại.
 2. Mở sản phẩm → "Thử đồ bằng AI" → chọn người mẫu hoặc tải ảnh → tick đồng ý → "Bắt đầu thử đồ AI".
-3. Chờ Gemini tạo ảnh; kiểm tra slider Trước/Sau, Lưu ảnh, Thử lại, Thử món khác.
+3. Chờ AI tạo ảnh; kiểm tra slider Trước/Sau, Lưu ảnh, Thử lại, Thử món khác.
 4. Kiểm tra `/products`, `/cart`, `/privacy`.
 
 ## Giới hạn cần biết

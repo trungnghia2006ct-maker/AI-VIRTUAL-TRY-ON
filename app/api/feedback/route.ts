@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createRateLimiter } from '@/lib/rate-limit';
 import { createSupabaseAdminClient } from '@/lib/supabase-admin';
 import { products } from '@/lib/products';
+import { PROMPT_VERSION_PATTERN } from '@/lib/tryon-prompt';
 import type { TryOnProvider } from '@/types/virtual-try-on';
 
 export const runtime = 'nodejs';
@@ -74,12 +75,12 @@ export async function POST(request: Request) {
   }
 
   if (!isRecord(input)) return responseError('Dữ liệu feedback không hợp lệ.', 400);
-  const allowedFields = ['productId', 'color', 'provider', 'durationMs', 'rating', 'reason'];
+  const allowedFields = ['productId', 'color', 'provider', 'promptVersion', 'durationMs', 'rating', 'reason'];
   if (Object.keys(input).some((key) => !allowedFields.includes(key))) {
     return responseError('Feedback chỉ được chứa thông tin đánh giá, không gửi ảnh hoặc dữ liệu khác.', 400);
   }
 
-  const { productId, color, provider, durationMs, rating, reason } = input;
+  const { productId, color, provider, promptVersion, durationMs, rating, reason } = input;
   if (
     typeof productId !== 'string'
     || typeof color !== 'string'
@@ -92,6 +93,13 @@ export async function POST(request: Request) {
     || (rating !== 'up' && rating !== 'down')
   ) {
     return responseError('Thông tin feedback không hợp lệ.', 400);
+  }
+
+  if (
+    promptVersion !== undefined
+    && (typeof promptVersion !== 'string' || !PROMPT_VERSION_PATTERN.test(promptVersion))
+  ) {
+    return responseError('Phiên bản prompt không hợp lệ.', 400);
   }
 
   if (rating === 'up' && reason !== undefined) {
@@ -112,6 +120,7 @@ export async function POST(request: Request) {
       product_id: productId,
       color,
       provider,
+      prompt_version: typeof promptVersion === 'string' ? promptVersion : null,
       duration_ms: durationMs,
       rating,
       reason: rating === 'down' ? reason : null,

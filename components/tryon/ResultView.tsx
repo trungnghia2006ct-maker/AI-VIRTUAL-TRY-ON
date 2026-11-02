@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Download, ShoppingBag, Sparkles } from 'lucide-react';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
+import { AiDisclaimer } from '@/components/tryon/AiDisclaimer';
 import type { Product } from '@/types/product';
 import type { TryOnProvider } from '@/types/virtual-try-on';
 
@@ -15,6 +16,7 @@ interface ResultViewProps {
   resultImageUrl: string;
   inferenceTimeMs: number | null;
   provider: TryOnProvider | null;
+  promptVersion: string | null;
   onColorChange: (color: string) => void;
   onSizeChange: (size: string) => void;
   onRetry: () => void;
@@ -32,6 +34,7 @@ export function ResultView({
   resultImageUrl,
   inferenceTimeMs,
   provider,
+  promptVersion,
   onColorChange,
   onSizeChange,
   onRetry,
@@ -136,9 +139,7 @@ export function ResultView({
             <span className="absolute left-4 top-4 rounded-full bg-ink/80 px-3 py-1.5 text-xs font-bold text-white">TRƯỚC</span>
             <span className="absolute right-4 top-4 rounded-full bg-white/90 px-3 py-1.5 text-xs font-bold text-ink">SAU</span>
           </div>
-          <p className="mt-3 text-xs leading-5 text-ink/55">
-            Ảnh do AI tạo, chỉ mang tính tham khảo. Độ chính xác phụ thuộc góc chụp và chất lượng ảnh.
-          </p>
+          <AiDisclaimer variant="full" provider={provider} />
           <label className="mt-4 block text-sm font-semibold">
             Điều chỉnh thanh trượt để so sánh
             <input

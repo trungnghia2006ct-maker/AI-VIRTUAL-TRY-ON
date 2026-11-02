@@ -72,6 +72,7 @@ function ProductPage() {
           resultImageUrl={tryOn.state.resultImageUrl}
           inferenceTimeMs={tryOn.state.inferenceTimeMs}
           provider={tryOn.state.provider}
+          promptVersion={tryOn.state.promptVersion}
           fitAssessment={getFitAssessment(size, fitProfile)}
           onColorChange={(nextColor) => rerunTryOn(nextColor, size)}
           onSizeChange={(nextSize) => rerunTryOn(color, nextSize)}
