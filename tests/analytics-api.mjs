@@ -1,8 +1,6 @@
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 const base='http://localhost:3101';
-const password=process.env.ANALYTICS_TEST_PASSWORD;
-if (!password) throw new Error('Set ANALYTICS_TEST_PASSWORD; run only against the isolated development server on port 3101.');
 class Client {
   jar=new Map();
   constructor(ua='Mozilla/5.0 AnalyticsIntegrationCheck',ip='127.0.0.10'){this.ua=ua;this.ip=ip;}
@@ -13,14 +11,13 @@ class Client {
   }
 }
 const admin=new Client();
-assert.equal((await admin.request('/admin/metrics')).status,307);
-assert.equal((await admin.request('/api/admin/analytics')).status,401);
-assert.equal((await admin.request('/api/admin/metrics')).status,401);
-assert.equal((await admin.request('/api/admin/metrics/login','POST',{password:'wrong'})).status,401);
-assert.equal((await admin.request('/api/admin/metrics/login','POST',{password},{origin:'https://outside.invalid'})).status,403);
-const login=await admin.request('/api/admin/metrics/login','POST',{password});
-assert.equal(login.status,200); assert.match(login.headers.get('set-cookie'),/HttpOnly/i);
 assert.equal((await admin.request('/admin/metrics')).status,200);
+assert.equal((await admin.request('/api/admin/analytics')).status,200);
+// Isolated local server has no Supabase; legacy metrics report storage unavailable.
+assert.equal((await admin.request('/api/admin/metrics')).status,503);
+const oldLogin=await admin.request('/admin/login');
+assert.equal(oldLogin.status,307);
+assert.equal(oldLogin.headers.get('location'),'/admin/metrics');
 assert.equal((await admin.request('/api/admin/analytics?days=999')).status,400);
 const user=new Client('Mozilla/5.0 AnalyticsIntegrationCheck','127.0.0.11');
 const view=randomUUID();
@@ -54,8 +51,6 @@ assert.equal((await (await admin.request('/api/admin/analytics?source=search')).
 const throttled=new Client('Mozilla/5.0 LimitCheck','127.0.0.14'); let status=0;
 for(let i=0;i<31;i++) status=(await throttled.request('/api/analytics/feedback','POST',{})).status;
 assert.equal(status,429);
-assert.equal((await admin.request('/api/admin/metrics/login','DELETE',undefined,{origin:'https://outside.invalid'})).status,403);
-assert.equal((await admin.request('/api/admin/metrics/login','DELETE')).status,200);
-assert.equal((await admin.request('/api/admin/analytics')).status,401);
-assert.equal((await admin.request('/admin/metrics')).status,307);
-console.log('PASS: protected route/API, login/logout/CSRF, validation, idempotency, revisions, privacy isolation, funnel, filters, bot/burst exclusion, rate limiting. Synthetic records exist only in the isolated test data directory.');
+assert.equal((await new Client().request('/api/admin/analytics')).status,200);
+assert.equal((await new Client().request('/admin/metrics')).status,200);
+console.log('PASS: public dashboard/API, legacy login redirect, validation, idempotency, revisions, privacy isolation, funnel, filters, bot/burst exclusion, rate limiting. Synthetic records exist only in the isolated test data directory.');

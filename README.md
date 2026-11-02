@@ -2,7 +2,7 @@
 
 ## Dashboard phân tích sản phẩm & phản hồi
 
-Nút **Dashboard** luôn hiển thị cố định góc dưới bên trái; nếu chưa đăng nhập, bấm nút sẽ được chuyển tới `/admin/login`. Dùng `ADMIN_METRICS_PASSWORD` để truy cập `/admin/metrics`. Có 👍/👎, lý do, nhận xét và dashboard traffic, clicks, thời gian, funnel, feedback, chất lượng dữ liệu, retention.
+Nút **Dashboard** luôn hiển thị cố định góc dưới bên trái; bấm nút để mở `/admin/metrics` không cần đăng nhập. Số liệu và nhận xét hiển thị công khai. Có 👍/👎, lý do, nhận xét và dashboard traffic, clicks, thời gian, funnel, feedback, chất lượng dữ liệu, retention.
 
 Thiết lập `ANALYTICS_SECRET` ngẫu nhiên ít nhất 32 ký tự. Không có Supabase thì chỉ môi trường phát triển dùng dữ liệu cục bộ trong `.data/analytics`; production yêu cầu Supabase và migration mới. Xem [thiết lập, phân quyền, định nghĩa chỉ số và kiểm tra](docs/ANALYTICS.md).
 
@@ -27,7 +27,6 @@ copy .env.example .env.local   # macOS/Linux: cp .env.example .env.local
 | `HF_TOKEN` | trống | Hugging Face token, chỉ dùng ở server khi `TRYON_PROVIDER=huggingface`. |
 | `SUPABASE_URL` | trống | URL project Supabase, chỉ dùng ở server để lưu metrics và feedback. |
 | `SUPABASE_SERVICE_ROLE_KEY` | trống | Service-role key Supabase, chỉ dùng ở server; tuyệt đối không thêm tiền tố `NEXT_PUBLIC_`. |
-| `ADMIN_METRICS_PASSWORD` | trống | Mật khẩu `/admin/metrics`, tối thiểu 12 ký tự; chỉ dùng ở server. |
 | `TRYON_RATE_LIMIT_ENABLED` | `true` | Giới hạn 5 lượt/IP/giờ. `false` để tắt (chỉ khi phát triển). |
 
 `.env.local` đã nằm trong `.gitignore`; không commit file `.env*` ngoài `.env.example`.
@@ -46,13 +45,13 @@ Các trang: `/` (sản phẩm), `/products`, `/cart`, `/privacy`, `/metrics` (�
 
 ## 4) Metrics quản trị và feedback
 
-1. Điền `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` và `ADMIN_METRICS_PASSWORD` vào `.env.local` hoặc Vercel Environment Variables. Mật khẩu quản trị cần ít nhất 12 ký tự.
+1. Điền `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` và `ANALYTICS_SECRET` vào `.env.local` hoặc Vercel Environment Variables. ANALYTICS_SECRET cần ngẫu nhiên, ít nhất 32 ký tự.
 2. Chạy lần lượt các migration trong Supabase SQL Editor, **trước khi deploy code mới**:
    1. `supabase/migrations/20261026010000_tryon_feedback_metrics.sql`
    2. `supabase/migrations/20261031010000_tryon_prompt_version.sql` (thêm cột `prompt_version`; chưa chạy thì lượt ghi feedback sẽ lỗi).
-3. Mở `/admin/metrics` và đăng nhập bằng `ADMIN_METRICS_PASSWORD`.
+3. Mở `/admin/metrics` để xem trực tiếp, không cần mật khẩu.
 
-Service-role key và mật khẩu chỉ được đọc trong route server; không dùng biến `NEXT_PUBLIC_*` cho secret. Migration bật Row Level Security, không cấp quyền cho `anon`/`authenticated`, và chỉ cấp quyền cần thiết cho `service_role`. Bản ghi chỉ chứa mã sản phẩm, màu, provider, thời lượng, trạng thái hoặc đánh giá; không nhận hay lưu ảnh.
+Service-role key và secret chỉ được đọc trong route server; không dùng biến `NEXT_PUBLIC_*` cho secret. Migration bật Row Level Security, không cấp quyền cho `anon`/`authenticated`, và chỉ cấp quyền cần thiết cho `service_role`. Bản ghi chỉ chứa mã sản phẩm, màu, provider, thời lượng, trạng thái hoặc đánh giá; không nhận hay lưu ảnh.
 
 ## 5) Giới hạn và bảo vệ chi phí
 

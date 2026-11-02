@@ -24,13 +24,13 @@ Nếu chưa có remote: tạo repo trống trên GitHub rồi `git remote add or
 | `HF_TOKEN` | Token Hugging Face, chỉ cấu hình ở server khi dùng Hugging Face |
 | `SUPABASE_URL` | URL của project Supabase |
 | `SUPABASE_SERVICE_ROLE_KEY` | Service-role key, chỉ server-side; không dùng `NEXT_PUBLIC_` |
-| `ADMIN_METRICS_PASSWORD` | Mật khẩu admin dài ít nhất 12 ký tự, chỉ server-side |
+| `ANALYTICS_SECRET` | Chuỗi ngẫu nhiên ít nhất 32 ký tự để ký cookie analytics, chỉ server-side |
 | `TRYON_RATE_LIMIT_ENABLED` | `true` |
 
 Không dùng tiền tố `NEXT_PUBLIC_` cho khóa API. Redeploy sau khi thay đổi biến môi trường.
 Provider Hugging Face hiện kết nối Space [yisol/IDM-VTON](https://huggingface.co/spaces/yisol/IDM-VTON) qua `/tryon`; thời gian và khả năng xử lý phụ thuộc trạng thái Space, hàng chờ và quota GPU.
 
-Chạy lần lượt `supabase/migrations/20261026010000_tryon_feedback_metrics.sql` rồi `supabase/migrations/20261031010000_tryon_prompt_version.sql` trong Supabase SQL Editor, **trước khi deploy code mới**, để dùng API feedback hoặc `/admin/metrics`. Dashboard được bảo vệ bằng mật khẩu server-side; metrics và feedback chỉ lưu metadata, không lưu ảnh.
+Chạy lần lượt `supabase/migrations/20261026010000_tryon_feedback_metrics.sql` rồi `supabase/migrations/20261031010000_tryon_prompt_version.sql` trong Supabase SQL Editor, **trước khi deploy code mới**, để dùng API feedback hoặc `/admin/metrics`. Dashboard và API số liệu mở công khai, không cần đăng nhập; metrics và feedback chỉ lưu metadata, không lưu ảnh.
 
 ## 4) Test preview trên điện thoại
 
