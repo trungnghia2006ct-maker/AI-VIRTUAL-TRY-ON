@@ -37,7 +37,8 @@ export default function PrivacyPage() {
           <Bullets items={[
             'Ảnh bạn tải lên hoặc chọn người mẫu: chỉ dùng để tạo kết quả thử đồ và được gửi đến nhà cung cấp AI (mục 3).',
             'Thông tin thử đồ: mã sản phẩm, màu, kích thước, nhà cung cấp AI, phiên bản prompt, thời lượng xử lý và trạng thái thành công hoặc lỗi.',
-            'Đánh giá của bạn: 👍/👎 và lý do nếu bạn chọn 👎, kèm các thông tin thử đồ ở trên.',
+            'Đánh giá của bạn: 👍/👎, lý do và nhận xét tùy chọn tối đa 500 ký tự (đừng nhập thông tin cá nhân). Phản hồi được gắn với mã cookie ngẫu nhiên để cập nhật thay vì ghi trùng; chỉ người có quyền quản trị phân tích xem được nhận xét.',
+            'Phân tích hành vi: cookie mã ngẫu nhiên tối đa 90 ngày, phiên 30 phút. Ghi trang đã xem (không có tham số URL), nhóm nguồn truy cập, loại thiết bị, nhấp vào thành phần đã chọn, độ sâu cuộn, thời gian tab hoạt động và các bước thử đồ/giỏ hàng. Không lưu IP, toàn bộ User-Agent, nội dung biểu mẫu hay ảnh vào analytics.',
             'Chiều cao và cân nặng (tùy chọn): chỉ dùng trên trình duyệt để gợi ý kích thước, không gửi đến máy chủ.',
             'Địa chỉ IP: được giữ tạm trong bộ nhớ máy chủ để giới hạn số lượt thử, không ghi vào cơ sở dữ liệu. Nền tảng lưu trữ có thể ghi nhật ký truy cập theo cơ chế riêng của họ.',
             'Giỏ hàng và số liệu phiên ở trang /metrics: lưu ngay trong trình duyệt của bạn (localStorage / sessionStorage).',
@@ -48,7 +49,7 @@ export default function PrivacyPage() {
           <Bullets items={[
             'Ảnh gốc và ảnh kết quả: không được lưu vào cơ sở dữ liệu của ứng dụng.',
             'Thông tin định danh như tên, email, số điện thoại: ứng dụng không thu thập.',
-            'Dữ liệu thử đồ và đánh giá không được dùng cho quảng cáo.',
+            'Dữ liệu thử đồ, phân tích hành vi và đánh giá không được dùng cho quảng cáo. Lịch sử các phiên bản nhận xét không được lưu.',
           ]} />
         </Section>
 
@@ -94,7 +95,9 @@ export default function PrivacyPage() {
 
         <Section title="5. Thời gian lưu giữ, quyền xóa và liên hệ">
           <Bullets items={[
-            'Thời gian lưu giữ dữ liệu thử đồ và đánh giá: 90 ngày kể từ lúc ghi nhận, sau đó dữ liệu bị xóa.',
+            'Thời gian lưu giữ dữ liệu thử đồ, phân tích hành vi và đánh giá: 90 ngày kể từ lúc ghi nhận, sau đó dữ liệu bị xóa theo tác vụ dọn dẹp do quản trị viên cấu hình. Dashboard tổng hợp tối đa 90 ngày gần nhất; các tín hiệu chỉ mang tính ước tính.',
+            'Bạn có thể tắt theo dõi hành vi ở cuối trang. Ứng dụng tôn trọng tín hiệu Do Not Track / Global Privacy Control. Phản hồi bạn chủ động gửi vẫn được lưu.',
+            'Bạn có thể dừng quá trình thử đồ bất kỳ lúc nào trong màn xử lý.',
             'Bạn có thể yêu cầu xóa dữ liệu liên quan đến mình qua email bên dưới. Vì dữ liệu không gắn với danh tính nên có thể cần bạn cung cấp thời điểm và sản phẩm đã thử.',
             <>Email liên hệ: <a className="underline" href="mailto:phanlehieu2006@gmail.com">phanlehieu2006@gmail.com</a>.</>,
           ]} />
